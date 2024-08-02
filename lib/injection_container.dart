@@ -18,6 +18,7 @@ import 'core/api/api_interceptor.dart';
 import 'core/api/dio_consumer.dart';
 import 'core/constants/constants.dart';
 import 'core/network/network_info.dart';
+import 'features/currency/data/models/currency model/currency_model.dart';
 
 final sl = GetIt.instance;
 
@@ -59,7 +60,8 @@ Future<void> init() async {
       await getApplicationDocumentsDirectory(); // from path_provider package
   sl.registerSingletonAsync<HiveInterface>(() async {
     Hive.init(appDocumentDirectory.path);
-    // Hive.registerAdapter(Adapter());
+    Hive.registerAdapter(CurrencyResponseModelAdapter());
+    Hive.registerAdapter(CurrencyResponseDataModelAdapter());
 
     return Hive;
   });

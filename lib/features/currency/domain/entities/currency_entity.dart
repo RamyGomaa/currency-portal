@@ -11,9 +11,11 @@ abstract class CurrencyResponseEntity {
 abstract class CurrencyResponseDataEntity {
   final String? currencyCode;
   final String? currencyName;
+  final String? imageUrl;
 
   CurrencyResponseDataEntity({
     this.currencyCode,
     this.currencyName,
+    this.imageUrl,
   });
 }

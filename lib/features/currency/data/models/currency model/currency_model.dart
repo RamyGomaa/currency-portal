@@ -25,10 +25,7 @@ class CurrencyResponseModel extends CurrencyResponseEntity {
   //from json
 
   factory CurrencyResponseModel.fromJson(Map<String, dynamic> json) {
-    print("We are calling from json method in currency model");
     Logger().i('We are calling from json method in currency model');
-    print("Sucess is ${json['success']}");
-    print("Symbols is ${json['symbols']}");
 
     //from map to list
     var list = json['symbols'] as Map<String, dynamic>;

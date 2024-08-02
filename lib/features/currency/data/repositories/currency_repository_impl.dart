@@ -50,6 +50,9 @@ class CurrencyRepositoryImpl extends CurrencyRepository {
       {bool isNetworkConnected = true}) async {
     try {
       final result = await localDataSource.getConvertCurrency(params);
+      if (result == null) {
+        throw CacheException();
+      }
       return Right(result);
     } on Exception catch (_) {
       return Left(fromExceptionToFailure(
@@ -59,22 +62,30 @@ class CurrencyRepositoryImpl extends CurrencyRepository {
 
   @override
   Future<Either<Failure, CurrencyResponseEntity>> getCurrencyList() async {
-    Logger().i('getCurrencyList called');
-    if (await networkInfo.isConnected) {
-      print('Network is connected');
-      try {
-        final result = await remoteDataSource
-            .getCurrencyList(FlavorConfig.instance.currencyApiKey);
-        return Right(result);
-      } on Exception catch (_) {
-        return const Left(ServerFailure());
+    try {
+      // Try to get data from local storage first
+      final localResult = await localDataSource.getCurrencyList();
+      if (localResult == null) {
+        throw CacheException();
       }
-    } else {
-      try {
-        final result = await localDataSource.getCurrencyList();
-        return Right(result);
-      } on Exception catch (_) {
-        return const Left(CacheFailure());
+      return Right(localResult);
+    } on Exception catch (_) {
+      // If local data is not available, check for internet connection
+      if (await networkInfo.isConnected) {
+        try {
+          // Fetch data from remote source
+          final remoteResult = await remoteDataSource
+              .getCurrencyList(FlavorConfig.instance.currencyApiKey);
+          // Cache the fetched data
+          localDataSource.cacheCurrencyList(remoteResult);
+          return Right(remoteResult);
+        } on Exception catch (_) {
+          // If fetching from remote fails, return ServerFailure
+          return const Left(ServerFailure());
+        }
+      } else {
+        // If no internet connection, return NetworkFailure
+        return const Left(NetworkFailure());
       }
     }
   }
@@ -87,14 +98,17 @@ class CurrencyRepositoryImpl extends CurrencyRepository {
         final result = await remoteDataSource.getHistoricalData(params);
         return Right(result);
       } on Exception catch (_) {
-        return Left(ServerFailure());
+        return const Left(ServerFailure());
       }
     } else {
       try {
         final result = await localDataSource.getHistoricalData(params);
+        if (result == null) {
+          throw CacheException();
+        }
         return Right(result);
       } on Exception catch (_) {
-        return Left(CacheFailure());
+        return const Left(CacheFailure());
       }
     }
   }

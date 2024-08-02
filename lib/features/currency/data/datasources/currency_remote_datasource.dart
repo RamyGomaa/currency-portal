@@ -50,7 +50,7 @@ class CurrencyRemoteDataSourceImpl extends CurrencyRemoteDataSource {
   ) async {
     Logger().i('getCurrencyList called wllahi');
     var res = await sl<Dio>().get(
-        FlavorConfig.instance.currencyBaseUrl + '/symbols',
+        '${FlavorConfig.instance.currencyBaseUrl}/symbols',
         queryParameters: {'api_key': apiKey});
 
     // Logger().e("Here is the data after calling it ${res.data}");
