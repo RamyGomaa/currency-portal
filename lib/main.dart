@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:currency_converter/core/flavor/flavor_config.dart';
 
-import 'app/app.dart';
+import 'main_global.dart';
 
 void main() {
-  runApp(const MyApp());
+  mainGlobal(flavor: Flavor.prod);
 }

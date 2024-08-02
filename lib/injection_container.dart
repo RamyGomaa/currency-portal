@@ -1,3 +1,4 @@
+import 'package:currency_converter/core/flavor/flavor_config.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
@@ -57,6 +58,7 @@ Future<void> init() async {
   sl.registerLazySingleton<Dio>(() {
     final dio = Dio();
     dio.interceptors.add(sl<ApiInterceptor>());
+    dio.options.baseUrl = FlavorConfig.instance.currencyBaseUrl;
 
     return dio;
   });
