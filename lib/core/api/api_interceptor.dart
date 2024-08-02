@@ -19,7 +19,7 @@ class ApiInterceptor extends Interceptor {
     //     EasyLocalization.of(AppSettings.navigatorState.currentContext!)!
     //         .currentLocale!
     //         .toLanguageTag();
-    if (options.headers[ApiRequestConstants.requiredToken] == true) {
+    if (options.headers[ApiHeaderConstants.requiredToken] == true) {
       // var expirRes = await authRepository.getToken();
       // await expirRes.fold((l) {
       //   sl<LoginBloc>().add(LogoutEvent());
@@ -36,7 +36,7 @@ class ApiInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401 &&
-        err.requestOptions.headers[ApiRequestConstants.requiredToken] == true) {
+        err.requestOptions.headers[ApiHeaderConstants.requiredToken] == true) {
       // var tokenRes =
       //     await authRepository.getValidAccessToken(forceRefresh: true);
       // await tokenRes.fold((l) {

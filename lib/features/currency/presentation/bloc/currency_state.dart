@@ -8,3 +8,23 @@ abstract class CurrencyState extends Equatable {
 }
 
 class CurrencyInitial extends CurrencyState {}
+
+class CurrencyLoading extends CurrencyState {}
+
+class CurrencyLoaded extends CurrencyState {
+  final CurrencyResponseEntity currenyData;
+
+  const CurrencyLoaded({required this.currenyData});
+
+  @override
+  List<Object> get props => [currenyData];
+}
+
+class CurrencyError extends CurrencyState {
+  final String message;
+
+  const CurrencyError({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}

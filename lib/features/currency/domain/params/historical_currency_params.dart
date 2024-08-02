@@ -1,17 +1,27 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'historical_currency_params.g.dart';
+
+@JsonSerializable()
 class HistoricalCurrencyParams {
+  @JsonKey(name: 'api_key')
+  final String apiKey;
   final String base;
-  final List<String> currencies;
-  final DateTime startDate;
-  final String? stringfyStartDate; //2024-07-25
-  final DateTime endDate;
-  final String? stringfyEndDate; //2024-07-25
+  final String currencies;
+  @JsonKey(name: 'start_date')
+  final String startDate;
+  @JsonKey(name: 'end_date')
+  final String endDate;
 
   HistoricalCurrencyParams({
+    required this.apiKey,
     required this.base,
     required this.currencies,
     required this.startDate,
-    this.stringfyStartDate,
     required this.endDate,
-    this.stringfyEndDate,
   });
+
+  factory HistoricalCurrencyParams.fromJson(Map<String, dynamic> json) =>
+      _$HistoricalCurrencyParamsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$HistoricalCurrencyParamsToJson(this);
 }

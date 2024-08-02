@@ -29,6 +29,8 @@ class AppStrings {
   static const String locNetworkErrorDescription = "network_error_description";
   static const String locNetworkErrorMessage = "network_error_message";
 
+  //cache errps
+  static const String locCacheErrorMessage = "cache_error_message";
   //auth errors
   static const String locUnAuthorizedError = "unauthorized_error";
   static const String locUnAuthorizedErrorMessage =

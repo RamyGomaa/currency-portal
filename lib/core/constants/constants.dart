@@ -1,5 +1,5 @@
 class Constants {
-  static const String appVersion = '1.0.0'; //first version
+  static const String appVersion = '0.0.1'; //first version
 
   static const int splashScreenTimeInSeconds = 3;
 

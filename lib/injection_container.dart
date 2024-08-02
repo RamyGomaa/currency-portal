@@ -1,4 +1,12 @@
 import 'package:currency_converter/core/flavor/flavor_config.dart';
+import 'package:currency_converter/features/currency/data/datasources/currency_local_datasource.dart';
+import 'package:currency_converter/features/currency/data/datasources/currency_remote_datasource.dart';
+import 'package:currency_converter/features/currency/data/repositories/currency_repository_impl.dart';
+import 'package:currency_converter/features/currency/domain/repositories/currency_repository.dart';
+import 'package:currency_converter/features/currency/domain/usecases/convert_currency_usecase.dart';
+import 'package:currency_converter/features/currency/domain/usecases/get_currency_list_usecase.dart';
+import 'package:currency_converter/features/currency/domain/usecases/get_historical_currency.dart';
+import 'package:currency_converter/features/currency/presentation/bloc/currency_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
@@ -8,6 +16,7 @@ import 'package:path_provider/path_provider.dart';
 import 'core/api/api_consumer.dart';
 import 'core/api/api_interceptor.dart';
 import 'core/api/dio_consumer.dart';
+import 'core/constants/constants.dart';
 import 'core/network/network_info.dart';
 
 final sl = GetIt.instance;
@@ -15,26 +24,32 @@ final sl = GetIt.instance;
 Future<void> init() async {
 //!bloc
 
-  // sl.registerFactory(() => Bloc(sl()));
+  sl.registerFactory(() => CurrencyBloc(sl(), sl(), sl()));
 
 //!usecases
 
-  // sl.registerLazySingleton(() => UseCase(sl()));
+  sl.registerLazySingleton(() => GetCurrencyListUsecase(sl()));
+  sl.registerLazySingleton(() => ConvertCurrencyUsecase(sl()));
+  sl.registerLazySingleton(() => GetHistoricalCurrencyUseCase(sl()));
 
 //!repositories
-  // sl.registerLazySingleton<Repository>(
-  //   () => RepositoryImpl(
-  //     networkInfo: sl(),
-  //     remoteDataSource: sl(),
-  //     localDataSource: sl(),
-  //   ),
-  // );
+  sl.registerLazySingleton<CurrencyRepository>(
+    () => CurrencyRepositoryImpl(
+      networkInfo: sl(),
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+    ),
+  );
 
 //!data sources
-  // sl.registerLazySingleton<LocalDataSouce>(
-  //     () => LocalDataSouceImpl(hive: sl()));
-  // sl.registerLazySingleton<RemoteDataSouce>(
-  //     () => RemoteDataSouceImpl(client: sl()));
+  sl.registerLazySingleton<CurrencyLocalDataSource>(
+      () => CurrencyLocalDataSourceImpl(hive: sl()));
+  sl.registerLazySingleton<CurrencyRemoteDataSource>(
+    () => CurrencyRemoteDataSourceImpl(
+      sl<Dio>(),
+      // baseUrl: FlavorConfig.instance.currencyBaseUrl,
+    ),
+  );
 
 //!core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
@@ -59,7 +74,18 @@ Future<void> init() async {
     final dio = Dio();
     dio.interceptors.add(sl<ApiInterceptor>());
     dio.options.baseUrl = FlavorConfig.instance.currencyBaseUrl;
-
+    dio.options.connectTimeout =
+        const Duration(seconds: Constants.networkTimeout);
+    dio.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
+      ),
+    );
     return dio;
   });
   sl.registerLazySingleton(() => InternetConnectionChecker());

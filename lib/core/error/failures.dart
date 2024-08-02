@@ -56,6 +56,7 @@ class NetworkFailure extends Failure {
 }
 
 class CacheFailure extends Failure {
+  const CacheFailure({super.message = AppStrings.locCacheErrorMessage});
   @override
   List<Object?> get props => [];
 }

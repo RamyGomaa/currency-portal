@@ -1,4 +1,4 @@
-class ApiRequestConstants {
+class ApiHeaderConstants {
   static const String requiredToken = 'requires_token';
   static const String authorization = 'Authorization';
   static const String bearer = 'Bearer';

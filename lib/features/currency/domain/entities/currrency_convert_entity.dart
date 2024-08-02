@@ -1,35 +1,35 @@
 abstract class CurrencyConvertResponseEntity {
-  final bool success;
+  final bool? success;
   final CurrencyConvertQueryEntity? query;
   final CurrencyConvertInfoEntity? info;
-  final double result;
+  final double? result;
 
   CurrencyConvertResponseEntity({
-    required this.success,
+    this.success,
     this.query,
     this.info,
-    required this.result,
+    this.result,
   });
 }
 
 abstract class CurrencyConvertInfoEntity {
-  final double quote;
-  final int timestamp;
+  final double? quote;
+  final int? timestamp;
 
   CurrencyConvertInfoEntity({
-    required this.quote,
-    required this.timestamp,
+    this.quote,
+    this.timestamp,
   });
 }
 
 abstract class CurrencyConvertQueryEntity {
-  final String from;
-  final String to;
-  final int amount;
+  final String? from;
+  final String? to;
+  final num? amount;
 
   CurrencyConvertQueryEntity({
-    required this.from,
-    required this.to,
-    required this.amount,
+    this.from,
+    this.to,
+    this.amount,
   });
 }

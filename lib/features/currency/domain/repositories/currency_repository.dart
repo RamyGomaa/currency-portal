@@ -24,7 +24,7 @@ abstract class CurrencyRepository {
   /// Returns a [Future] that resolves to an [Either] containing a [Failure]
   /// on the left side if an error occurs, or a [List] of [CurrencyEntity]
   /// objects on the right side representing the available currencies.
-  Future<Either<Failure, List<CurrencyResponseEntity>>> getCurrencyList();
+  Future<Either<Failure, CurrencyResponseEntity>> getCurrencyList();
 
   Future<Either<Failure, HistoricalCurrencyResponseEntity>>
       getHistoricalCurrencyData(HistoricalCurrencyParams params);
