@@ -3,6 +3,9 @@
 
 A Flutter application that provides real-time and historical currency conversion data. The app features a clean and intuitive UI, allowing users to convert currencies and view historical exchange rates through interactive charts.
 
+### Flutter Version:
+- Channel stable, 3.22.3
+
 ### Features:
 - **Real-Time Currency Conversion**: Convert between multiple currencies with up-to-date exchange rates.
 - **Historical Data Visualization**: View historical exchange rates with interactive charts.
@@ -10,10 +13,29 @@ A Flutter application that provides real-time and historical currency conversion
 - **Dependency Injection**: Efficiently manage dependencies with a service locator pattern.
 - **Unit Tests**: Test coverage for reliable and maintainable code.
 
+
+### Main Page Views:
+The app features three main page views covering the requested functionalities:
+1. **Currency Conversion**: 
+   ![Screenshot 2024-08-04 030402](https://github.com/user-attachments/assets/502f0e86-4fea-4dee-9909-87ee9bcc025b)
+
+2. **Currency History/Timeline**:
+  ![Screenshot 2024-08-04 030432](https://github.com/user-attachments/assets/258b58d8-721e-4b5f-98f8-5e465c7cc0d0)
+
+3. **List of All Currencies**:
+  ![Screenshot 2024-08-04 030441](https://github.com/user-attachments/assets/567dffec-7ab4-4ff0-bc1c-a50386e0947d)
+
 ### Flavors:
 This app has two Flutter flavors (not native ones) to handle different API URLs for development and production environments:
 - **Development Flavor**: Uses a mock API (`wiremockapi`) for extensive testing.
 - **Production Flavor**: Uses the `forexrateapi` with a limit of 100 free tests. Please use it carefully.
+
+### Environment Variables:
+Create a `.env` file in the root directory and add the following:
+```env
+PROD_CURRENCY_API_KEY={forexrateapi API key}
+DEV_CURRENCY_API_KEY={test API key for wiremock}
+```
 
 #### Running the App:
 - **Development Flavor**:
@@ -78,7 +100,7 @@ We use the `cached_network_image` package to cache images and provide placeholde
 ### Getting Started:
 1. **Clone the repository**:
    ```sh
-  [ https://github.com/RamyGomaa/currency-portal.git](https://github.com/RamyGomaa/currency-portal.git)
+    git clone https://github.com/RamyGomaa/currency-portal.git
    ```
 2. **Install dependencies**:
    ```sh

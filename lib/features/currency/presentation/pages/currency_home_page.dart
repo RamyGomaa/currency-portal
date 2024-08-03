@@ -36,8 +36,8 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(
           "Currency Portal",
-          style: getSemiBoldTextStyle(
-            color: ColorManager.textPrimary,
+          style: getLightTextStyle(
+            color: ColorManager.white,
             fontSize: 20,
           ),
         ),
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: ColorManager.secondary,
+        selectedItemColor: ColorManager.white,
         onTap: _onItemTapped,
       ),
     );

@@ -37,10 +37,11 @@ ThemeData? getApplicationTheme(BuildContext context) {
       appBarTheme: AppBarTheme(
         iconTheme: const IconThemeData(color: ColorManager.darkGrey), //
         centerTitle: true,
-        color: ColorManager.primary,
+        backgroundColor: ColorManager.secondary,
+        // color: ColorManager.primary,
         elevation: AppSize.s4,
         shadowColor: ColorManager.grey,
-        titleTextStyle: getRegularTextStyle(),
+        titleTextStyle: getRegularTextStyle(color: ColorManager.white),
       ),
       // button theme
       buttonTheme: const ButtonThemeData(
@@ -120,13 +121,13 @@ ThemeData? getApplicationTheme(BuildContext context) {
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        elevation: AppSize.s4,
-        selectedItemColor: ColorManager.secondary,
-        unselectedItemColor: ColorManager.grey1,
-        showUnselectedLabels: true,
-        showSelectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-      ),
+          elevation: AppSize.s4,
+          selectedItemColor: ColorManager.white,
+          unselectedItemColor: ColorManager.grey1,
+          showUnselectedLabels: true,
+          showSelectedLabels: true,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: ColorManager.secondary),
       colorScheme: ColorScheme.fromSwatch().copyWith(
           secondary: ColorManager.accent, surface: ColorManager.primary));
 }

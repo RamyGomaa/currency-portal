@@ -23,6 +23,7 @@ class CurrencyFlag extends StatelessWidget {
       create: (context) => sl<CurrencyBloc>(),
       child: Builder(builder: (context) {
         return Material(
+          color: ColorManager.lightGrey,
           child: CachedNetworkImage(
               imageUrl: '',
               placeholder: (context, url) => const Center(
