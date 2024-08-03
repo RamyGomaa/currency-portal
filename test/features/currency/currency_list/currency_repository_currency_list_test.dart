@@ -51,11 +51,12 @@ void main() {
 
     test('should return local data when available', () async {
       await _testShouldReturnLocalDataWhenAvailable(
-          testSetup.mockLocalDataSource,
-          testSetup.repository,
-          tCurrencyResponseEntity,
-          testSetup.mockNetworkInfo,
-          testSetup.mockRemoteDataSource);
+        testSetup.mockLocalDataSource,
+        testSetup.repository,
+        tCurrencyResponseEntity,
+        testSetup.mockNetworkInfo,
+        testSetup.mockRemoteDataSource,
+      );
     });
 
     test(

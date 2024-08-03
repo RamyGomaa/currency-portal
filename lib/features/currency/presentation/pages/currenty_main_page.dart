@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:currency_converter/core/resources/all_resources.dart';
 import 'package:currency_converter/core/resources/styles_manager.dart';
 import 'package:currency_converter/features/currency/domain/entities/currency_entity.dart';
+import 'package:currency_converter/features/currency/presentation/bloc/currency_historical_data_bloc.dart';
 import 'package:currency_converter/features/currency/presentation/currency_bloc/currency_bloc.dart';
 import 'package:currency_converter/features/currency/presentation/currency_convertion_bloc/currency_conversion_bloc.dart';
 import 'package:currency_converter/features/currency/presentation/pages/currency_home_page.dart';
@@ -34,7 +35,7 @@ class CurrencyMainPage extends StatelessWidget {
           if (state is CurrencyLoading) {
             return const Center(
               child: CircularProgressIndicator(
-                color: ColorManager.accent,
+                color: ColorManager.grey,
               ),
             );
           }
@@ -46,6 +47,9 @@ class CurrencyMainPage extends StatelessWidget {
                 ),
                 BlocProvider<CurrencyConversionBloc>(
                   create: (context) => sl<CurrencyConversionBloc>(),
+                ),
+                BlocProvider<CurrencyHistoricalDataBloc>(
+                  create: (context) => sl<CurrencyHistoricalDataBloc>(),
                 ),
               ],
               child: HomePage(

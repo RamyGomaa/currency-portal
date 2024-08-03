@@ -19,6 +19,11 @@ class HiveAdapter {
 
   static const currencyResponseDataModel = 5;
 
+  // HistoricalCurrencyResponseModel
+  static const historicalCurrencyResponseModel = 6;
+
+  static const historicalCurrencyRateModel = 7;
+
   //currencyListAdapter
   // static const currencyList = 2;
 

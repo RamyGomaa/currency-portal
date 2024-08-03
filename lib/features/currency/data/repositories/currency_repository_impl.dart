@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
 
+import '../../../../core/time/ntp_service.dart';
 import '../../domain/repositories/currency_repository.dart';
 import '../datasources/currency_local_datasource.dart';
 import '../datasources/currency_remote_datasource.dart';
@@ -24,12 +25,13 @@ class CurrencyRepositoryImpl extends CurrencyRepository {
   final CurrencyLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
   final FlavorConfig flavorConfig;
-
+  final NTPService ntp;
   CurrencyRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
     required this.flavorConfig,
+    required this.ntp,
   });
 
   @override
@@ -38,7 +40,7 @@ class CurrencyRepositoryImpl extends CurrencyRepository {
     if (await networkInfo.isConnected) {
       params.apiKey = flavorConfig.currencyApiKey;
       params.date = DateFormat('yyyy-MM-dd')
-          .format((await NTP.now()).subtract(const Duration(days: 1)));
+          .format((await ntp.now()).subtract(const Duration(days: 1)));
       return await _fetchFromRemoteOrLocal(params);
     } else {
       return await _fetchFromLocal(params, isNetworkConnected: false);
@@ -136,7 +138,15 @@ class CurrencyRepositoryImpl extends CurrencyRepository {
       getHistoricalCurrencyData(HistoricalCurrencyParams params) async {
     if (await networkInfo.isConnected) {
       try {
+        final time = await ntp.now();
+        params.startDate = DateFormat('yyyy-MM-dd')
+            .format(time.subtract(const Duration(days: 5)));
+        params.endDate = DateFormat('yyyy-MM-dd')
+            .format(time.subtract(const Duration(days: 1)));
+        params.apiKey = flavorConfig.currencyApiKey;
+
         final result = await remoteDataSource.getHistoricalData(params);
+        await localDataSource.cacheHistoricalData(result);
         return Right(result);
       } on Exception catch (_) {
         return const Left(ServerFailure());

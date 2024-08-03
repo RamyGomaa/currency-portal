@@ -1,12 +1,15 @@
 import 'package:currency_converter/core/flavor/flavor_config.dart';
+import 'package:currency_converter/core/time/ntp_service.dart';
 import 'package:currency_converter/features/currency/data/datasources/currency_local_datasource.dart';
 import 'package:currency_converter/features/currency/data/datasources/currency_remote_datasource.dart';
 import 'package:currency_converter/features/currency/data/models/currency%20convert%20model/currency_convert_model.dart';
+import 'package:currency_converter/features/currency/data/models/historical%20currency%20model/historical_currency_model.dart';
 import 'package:currency_converter/features/currency/data/repositories/currency_repository_impl.dart';
 import 'package:currency_converter/features/currency/domain/repositories/currency_repository.dart';
 import 'package:currency_converter/features/currency/domain/usecases/convert_currency_usecase.dart';
 import 'package:currency_converter/features/currency/domain/usecases/get_currency_list_usecase.dart';
 import 'package:currency_converter/features/currency/domain/usecases/get_historical_currency.dart';
+import 'package:currency_converter/features/currency/presentation/bloc/currency_historical_data_bloc.dart';
 import 'package:currency_converter/features/currency/presentation/currency_bloc/currency_bloc.dart';
 import 'package:currency_converter/features/currency/presentation/currency_convertion_bloc/currency_conversion_bloc.dart';
 import 'package:dio/dio.dart';
@@ -29,6 +32,7 @@ Future<void> init() async {
 
   sl.registerFactory(() => CurrencyBloc(sl()));
   sl.registerFactory(() => CurrencyConversionBloc(sl()));
+  sl.registerFactory(() => CurrencyHistoricalDataBloc(sl()));
 
 //!usecases
 
@@ -43,6 +47,7 @@ Future<void> init() async {
       remoteDataSource: sl(),
       localDataSource: sl(),
       flavorConfig: sl(),
+      ntp: sl(),
     ),
   );
 
@@ -59,6 +64,7 @@ Future<void> init() async {
 //!core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
   sl.registerLazySingleton(() => FlavorConfig.instance);
+  sl.registerLazySingleton<NTPService>(() => NTPServiceImpl());
 
 //!external
   final appDocumentDirectory =
@@ -70,7 +76,7 @@ Future<void> init() async {
     Hive.registerAdapter(CurrencyConvertResponseModelAdapter());
     Hive.registerAdapter(CurrencyConvertQueryModelAdapter());
     Hive.registerAdapter(CurrencyConvertInfoModelAdapter());
-    // Hive.registerAdapter(CurrencyConvertResponseModelAdapter());
+    Hive.registerAdapter(HistoricalCurrencyResponseModelAdapter());
 
     return Hive;
   });

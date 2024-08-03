@@ -1,5 +1,6 @@
 import 'package:currency_converter/core/error/exceptions.dart';
 import 'package:currency_converter/core/error/failures.dart';
+import 'package:currency_converter/core/time/ntp_service.dart';
 // import 'package:currency_converter/core/flavor/flavor_config.dart';
 // import 'package:currency_converter/core/network/network_info.dart';
 // import 'package:currency_converter/features/currency/data/datasources/currency_local_datasource.dart';
@@ -46,12 +47,15 @@ void main() {
 
     test('Should check network current state before calling remote', () async {
       await _testShouldCheckNetworkStateBeforeCallingRemote(
-          testSetup.mockRemoteDataSource,
-          testSetup.mockLocalDataSource,
-          testSetup.mockNetworkInfo,
-          testSetup.repository,
-          tCurrencyConvertEntity,
-          tParams);
+        testSetup.mockRemoteDataSource,
+        testSetup.mockLocalDataSource,
+        testSetup.mockNetworkInfo,
+        testSetup.repository,
+        tCurrencyConvertEntity,
+        tParams,
+        testSetup.mockNTPService,
+        testSetup.mockFlavorConfig,
+      );
     });
 
     group("Device is Connected to internet", () {
@@ -64,31 +68,40 @@ void main() {
           'Should return remote data when the call to remote data source is successful',
           () async {
         await _testShouldReturnRemoteDataWhenCallToRemoteDataSourceIsSuccessful(
-            testSetup.mockRemoteDataSource,
-            testSetup.repository,
-            tCurrencyConvertEntity,
-            tParams);
+          testSetup.mockRemoteDataSource,
+          testSetup.repository,
+          tCurrencyConvertEntity,
+          tParams,
+          testSetup.mockNTPService,
+          testSetup.mockFlavorConfig,
+        );
       });
 
       test(
         'Should call local data source when the call to remote data source is unsuccessful',
         () async {
           await _testShouldCallLocalDataSourceWhenCallToRemoteDataSourceIsUnsuccessful(
-              testSetup.mockRemoteDataSource,
-              testSetup.mockLocalDataSource,
-              testSetup.repository,
-              tCurrencyConvertEntity,
-              tParams);
+            testSetup.mockRemoteDataSource,
+            testSetup.mockLocalDataSource,
+            testSetup.repository,
+            tCurrencyConvertEntity,
+            tParams,
+            testSetup.mockNTPService,
+            testSetup.mockFlavorConfig,
+          );
         },
       );
 
       test('should return server exception if server and cache failed',
           () async {
         await _testShouldReturnServerExceptionIfServerAndCacheFailed(
-            testSetup.mockRemoteDataSource,
-            testSetup.mockLocalDataSource,
-            testSetup.repository,
-            tParams);
+          testSetup.mockRemoteDataSource,
+          testSetup.mockLocalDataSource,
+          testSetup.repository,
+          tParams,
+          testSetup.mockNTPService,
+          testSetup.mockFlavorConfig,
+        );
       });
     });
 
@@ -102,36 +115,50 @@ void main() {
         'Should call local data source when the call to remote data source is unsuccessful',
         () async {
           await _testShouldCallLocalDataSourceWhenNoInternetConnection(
-              testSetup.mockLocalDataSource,
-              testSetup.repository,
-              tCurrencyConvertEntity,
-              tParams,
-              testSetup.mockRemoteDataSource);
+            testSetup.mockLocalDataSource,
+            testSetup.repository,
+            tCurrencyConvertEntity,
+            tParams,
+            testSetup.mockRemoteDataSource,
+            testSetup.mockNTPService,
+            testSetup.mockFlavorConfig,
+          );
         },
       );
 
       test('should return network exception if server and cache failed',
           () async {
         await _testShouldReturnNetworkExceptionIfServerAndCacheFailed(
-            testSetup.mockLocalDataSource, testSetup.repository, tParams);
+          testSetup.mockLocalDataSource,
+          testSetup.repository,
+          tParams,
+          testSetup.mockNTPService,
+          testSetup.mockFlavorConfig,
+        );
       });
     });
   });
 }
 
 Future<void> _testShouldCheckNetworkStateBeforeCallingRemote(
-    MockCurrencyRemoteDataSource mockRemoteDataSource,
-    MockCurrencyLocalDataSource mockLocalDataSource,
-    MockNetworkInfo mockNetworkInfo,
-    CurrencyRepositoryImpl repository,
-    CurrencyConvertResponseModel tCurrencyConvertEntity,
-    ConvertCurrencyParams tParams) async {
+  MockCurrencyRemoteDataSource mockRemoteDataSource,
+  MockCurrencyLocalDataSource mockLocalDataSource,
+  MockNetworkInfo mockNetworkInfo,
+  CurrencyRepositoryImpl repository,
+  CurrencyConvertResponseModel tCurrencyConvertEntity,
+  ConvertCurrencyParams tParams,
+  NTPService ntp,
+  MockFlavorConfig mockFlavorConfig,
+) async {
   // arrange
   when(mockRemoteDataSource.convertCurrency(any))
       .thenAnswer((_) async => tCurrencyConvertEntity);
   when(mockLocalDataSource.getConvertCurrency(any))
       .thenAnswer((_) async => tCurrencyConvertEntity);
   when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+  when(ntp.now()).thenAnswer((_) async => DateTime(2024, 8, 3));
+  when(mockFlavorConfig.currencyApiKey)
+      .thenReturn('TestAPIKeyForCurrency2347928xz3942h');
   // act
   repository.convertCurrency(tParams);
   // assert
@@ -143,10 +170,15 @@ Future<void> _testShouldReturnRemoteDataWhenCallToRemoteDataSourceIsSuccessful(
   CurrencyRepositoryImpl repository,
   CurrencyConvertResponseModel tCurrencyConvertEntity,
   ConvertCurrencyParams tParams,
+  NTPService ntp,
+  MockFlavorConfig mockFlavorConfig,
 ) async {
   // arrange
   when(mockRemoteDataSource.convertCurrency(any))
       .thenAnswer((_) async => tCurrencyConvertEntity);
+  when(ntp.now()).thenAnswer((_) async => DateTime(2024, 8, 3));
+  when(mockFlavorConfig.currencyApiKey)
+      .thenReturn('TestAPIKeyForCurrency2347928xz3942h');
   // act
   final result = await repository.convertCurrency(tParams);
   // assert
@@ -161,11 +193,16 @@ Future<void>
   CurrencyRepositoryImpl repository,
   CurrencyConvertResponseModel tCurrencyConvertEntity,
   ConvertCurrencyParams tParams,
+  NTPService ntp,
+  MockFlavorConfig mockFlavorConfig,
 ) async {
   // arrange
   when(mockRemoteDataSource.convertCurrency(any)).thenThrow(ServerException());
   when(mockLocalDataSource.getConvertCurrency(any))
       .thenAnswer((_) async => tCurrencyConvertEntity);
+  when(ntp.now()).thenAnswer((_) async => DateTime(2024, 8, 3));
+  when(mockFlavorConfig.currencyApiKey)
+      .thenReturn('TestAPIKeyForCurrency2347928xz3942h');
   // act
   final result = await repository.convertCurrency(tParams);
   // assert
@@ -179,10 +216,15 @@ Future<void> _testShouldReturnServerExceptionIfServerAndCacheFailed(
   MockCurrencyLocalDataSource mockLocalDataSource,
   CurrencyRepositoryImpl repository,
   ConvertCurrencyParams tParams,
+  NTPService ntp,
+  MockFlavorConfig mockFlavorConfig,
 ) async {
   // arrange
   when(mockRemoteDataSource.convertCurrency(any)).thenThrow(ServerException());
   when(mockLocalDataSource.getConvertCurrency(any)).thenThrow(CacheException());
+  when(ntp.now()).thenAnswer((_) async => DateTime(2024, 8, 3));
+  when(mockFlavorConfig.currencyApiKey)
+      .thenReturn('TestAPIKeyForCurrency2347928xz3942h');
   // act
   final result = await repository.convertCurrency(tParams);
   // assert
@@ -190,14 +232,20 @@ Future<void> _testShouldReturnServerExceptionIfServerAndCacheFailed(
 }
 
 Future<void> _testShouldCallLocalDataSourceWhenNoInternetConnection(
-    MockCurrencyLocalDataSource mockLocalDataSource,
-    CurrencyRepositoryImpl repository,
-    CurrencyConvertResponseModel tCurrencyConvertEntity,
-    ConvertCurrencyParams tParams,
-    MockCurrencyRemoteDataSource mockRemoteDataSource) async {
+  MockCurrencyLocalDataSource mockLocalDataSource,
+  CurrencyRepositoryImpl repository,
+  CurrencyConvertResponseModel tCurrencyConvertEntity,
+  ConvertCurrencyParams tParams,
+  MockCurrencyRemoteDataSource mockRemoteDataSource,
+  NTPService ntp,
+  MockFlavorConfig mockFlavorConfig,
+) async {
   // arrange
   when(mockLocalDataSource.getConvertCurrency(any))
       .thenAnswer((_) async => tCurrencyConvertEntity);
+  when(ntp.now()).thenAnswer((_) async => DateTime(2024, 8, 3));
+  when(mockFlavorConfig.currencyApiKey)
+      .thenReturn('TestAPIKeyForCurrency2347928xz3942h');
   // act
   final result = await repository.convertCurrency(tParams);
   // assert
@@ -210,9 +258,14 @@ Future<void> _testShouldReturnNetworkExceptionIfServerAndCacheFailed(
   MockCurrencyLocalDataSource mockLocalDataSource,
   CurrencyRepositoryImpl repository,
   ConvertCurrencyParams tParams,
+  NTPService ntp,
+  MockFlavorConfig mockFlavorConfig,
 ) async {
   // arrange
   when(mockLocalDataSource.getConvertCurrency(any)).thenThrow(CacheException());
+  when(ntp.now()).thenAnswer((_) async => DateTime(2024, 8, 3));
+  when(mockFlavorConfig.currencyApiKey)
+      .thenReturn('TestAPIKeyForCurrency2347928xz3942h');
   // act
   final result = await repository.convertCurrency(tParams);
   // assert

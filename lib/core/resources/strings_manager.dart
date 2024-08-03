@@ -230,9 +230,15 @@ class AppStrings {
 
   static final passwordRegEx =
       RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$');
+
+  static const String errorGettingDataPageState =
+      "We got an error, please check your internet connection and try again";
 }
 
 enum NoRoute { title, body }
+
+//  " "
+
 
 // double prefaredLanguageValue(String? value, LanguageEntity language) {
 //   if (language.isArabic()) {

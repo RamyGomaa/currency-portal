@@ -7,6 +7,7 @@ import 'dart:async' as _i6;
 
 import 'package:currency_converter/core/flavor/flavor_config.dart' as _i11;
 import 'package:currency_converter/core/network/network_info.dart' as _i10;
+import 'package:currency_converter/core/time/ntp_service.dart' as _i13;
 import 'package:currency_converter/features/currency/data/datasources/currency_local_datasource.dart'
     as _i9;
 import 'package:currency_converter/features/currency/data/datasources/currency_remote_datasource.dart'
@@ -62,6 +63,16 @@ class _FakeCurrencyResponseEntity_1 extends _i1.SmartFake
 class _FakeHistoricalCurrencyResponseEntity_2 extends _i1.SmartFake
     implements _i4.HistoricalCurrencyResponseEntity {
   _FakeHistoricalCurrencyResponseEntity_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeDateTime_3 extends _i1.SmartFake implements DateTime {
+  _FakeDateTime_3(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -252,4 +263,28 @@ class MockFlavorConfig extends _i1.Mock implements _i11.FlavorConfig {
         Invocation.getter(#isProd),
         returnValue: false,
       ) as bool);
+}
+
+/// A class which mocks [NTPService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNTPService extends _i1.Mock implements _i13.NTPService {
+  MockNTPService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<DateTime> now() => (super.noSuchMethod(
+        Invocation.method(
+          #now,
+          [],
+        ),
+        returnValue: _i6.Future<DateTime>.value(_FakeDateTime_3(
+          this,
+          Invocation.method(
+            #now,
+            [],
+          ),
+        )),
+      ) as _i6.Future<DateTime>);
 }

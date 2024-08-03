@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Currency Converter",
+          "Currency Portal",
           style: getSemiBoldTextStyle(
             color: ColorManager.textPrimary,
             fontSize: 20,

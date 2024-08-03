@@ -52,8 +52,9 @@ ThemeData? getApplicationTheme(BuildContext context) {
       //elevated button theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
+          foregroundColor: ColorManager.white,
           textStyle: getRegularTextStyle(
-              color: ColorManager.textPrimary,
+              color: ColorManager.white,
               fontFamily: FontConstants.defaultFontFamily),
           backgroundColor: ColorManager.secondary,
           // side: const BorderSide(color: ColorManager.darkGrey, width: 0.5),

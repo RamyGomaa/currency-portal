@@ -10,7 +10,7 @@ ConvertCurrencyParams _$ConvertCurrencyParamsFromJson(
         Map<String, dynamic> json) =>
     ConvertCurrencyParams(
       apiKey: json['api_key'] as String?,
-      date: json['date'] as String,
+      date: json['date'] as String?,
       fromCurrency: json['from'] as String,
       toCurrency: json['to'] as String,
       amount: (json['amount'] as num).toDouble(),

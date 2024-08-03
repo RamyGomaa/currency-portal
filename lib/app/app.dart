@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: MaterialApp(
-        title: 'Currency Converter',
+        title: 'Currency Portal',
         debugShowCheckedModeBanner: false,
         theme: getApplicationTheme(context),
         onGenerateRoute: RouteGenerator.getRoute,

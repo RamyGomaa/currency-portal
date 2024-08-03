@@ -49,9 +49,41 @@ class _CurrencyConversionPageState extends State<CurrencyConversionPage> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (_result != null)
+            Expanded(
+              child:
+                  BlocBuilder<CurrencyConversionBloc, CurrencyConversionState>(
+                builder: (context, state) {
+                  if (state is CurrencyConversionLoaded) {
+                    return Center(
+                      child: Text(
+                        "${state.result.query?.amount}  ${state.result.query?.from} = ${state.result.result}  ${state.result.query?.to}",
+                        style: getLightTextStyle(
+                          color: ColorManager.darkGrey,
+                          fontSize: 20.sp,
+                        ),
+                      ),
+                    );
+                  } else if (state is CurrencyConversionError) {
+                    return Center(
+                      child: Text(
+                        "Error: ${state.message}",
+                        style: getLightTextStyle(color: ColorManager.darkGrey),
+                      ),
+                    );
+                  } else {
+                    //loading
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      color: ColorManager.grey,
+                    ));
+                  }
+                },
+              ),
+            ),
           LayoutBuilder(builder: (context, constraints) {
             return Stack(
               fit: StackFit.loose,
@@ -117,37 +149,6 @@ class _CurrencyConversionPageState extends State<CurrencyConversionPage> {
             child: Text("Calculate",
                 style: getLightTextStyle(color: ColorManager.white)),
           ),
-          const SizedBox(height: 16),
-          if (_result != null)
-            BlocBuilder<CurrencyConversionBloc, CurrencyConversionState>(
-              builder: (context, state) {
-                if (state is CurrencyConversionLoaded) {
-                  return Center(
-                    child: Text(
-                      "${state.result.query?.amount}  ${state.result.query?.from} = ${state.result.result}  ${state.result.query?.to}",
-                      style: getLightTextStyle(
-                        color: ColorManager.darkGrey,
-                        fontSize: 20.sp,
-                      ),
-                    ),
-                  );
-                } else if (state is CurrencyConversionError) {
-                  return Center(
-                    child: Text(
-                      "Error: ${state.message}",
-                      style: getLightTextStyle(color: ColorManager.darkGrey),
-                    ),
-                  );
-                } else {
-                  //loading
-                  return const Center(
-                      child: CircularProgressIndicator(
-                    color: ColorManager.grey,
-                  ));
-                }
-              },
-            ),
-          const SizedBox(height: 16),
         ],
       ),
     );

@@ -72,6 +72,11 @@ class CurrencyLocalDataSourceImpl implements CurrencyLocalDataSource {
   @override
   Future<HistoricalCurrencyResponseEntity>? getHistoricalData() async {
     var res = await Hive.openBox(HiveBox.historicalData);
-    return res.get(HiveBox.historicalData);
+    final data = res.get(HiveBox.historicalData);
+    if (data != null) {
+      return data;
+    } else {
+      throw CacheException();
+    }
   }
 }

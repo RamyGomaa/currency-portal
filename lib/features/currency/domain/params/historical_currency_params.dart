@@ -4,20 +4,20 @@ part 'historical_currency_params.g.dart';
 @JsonSerializable()
 class HistoricalCurrencyParams {
   @JsonKey(name: 'api_key')
-  final String apiKey;
-  final String base;
+  String? apiKey;
+  final String? base;
   final String currencies;
   @JsonKey(name: 'start_date')
-  final String startDate;
+  String? startDate;
   @JsonKey(name: 'end_date')
-  final String endDate;
+  String? endDate;
 
   HistoricalCurrencyParams({
-    required this.apiKey,
+    this.apiKey,
     required this.base,
     required this.currencies,
-    required this.startDate,
-    required this.endDate,
+    this.startDate,
+    this.endDate,
   });
 
   factory HistoricalCurrencyParams.fromJson(Map<String, dynamic> json) =>

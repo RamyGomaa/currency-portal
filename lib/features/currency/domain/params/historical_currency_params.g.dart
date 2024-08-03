@@ -9,11 +9,11 @@ part of 'historical_currency_params.dart';
 HistoricalCurrencyParams _$HistoricalCurrencyParamsFromJson(
         Map<String, dynamic> json) =>
     HistoricalCurrencyParams(
-      apiKey: json['api_key'] as String,
-      base: json['base'] as String,
+      apiKey: json['api_key'] as String?,
+      base: json['base'] as String?,
       currencies: json['currencies'] as String,
-      startDate: json['start_date'] as String,
-      endDate: json['end_date'] as String,
+      startDate: json['start_date'] as String?,
+      endDate: json['end_date'] as String?,
     );
 
 Map<String, dynamic> _$HistoricalCurrencyParamsToJson(
