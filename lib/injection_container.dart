@@ -39,6 +39,7 @@ Future<void> init() async {
       networkInfo: sl(),
       remoteDataSource: sl(),
       localDataSource: sl(),
+      flavorConfig: sl(),
     ),
   );
 
@@ -48,12 +49,13 @@ Future<void> init() async {
   sl.registerLazySingleton<CurrencyRemoteDataSource>(
     () => CurrencyRemoteDataSourceImpl(
       sl<Dio>(),
-      // baseUrl: FlavorConfig.instance.currencyBaseUrl,
+      baseUrl: FlavorConfig.instance.currencyBaseUrl,
     ),
   );
 
 //!core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+  sl.registerLazySingleton(() => FlavorConfig.instance);
 
 //!external
   final appDocumentDirectory =

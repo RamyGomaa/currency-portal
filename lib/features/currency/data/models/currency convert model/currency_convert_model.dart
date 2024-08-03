@@ -27,12 +27,16 @@ class CurrencyConvertResponseModel extends CurrencyConvertResponseEntity {
     required this.result,
   });
 
-  factory CurrencyConvertResponseModel.fromJson(Map<String, dynamic> json) {
-    print("CurrencyConvertResponseModel ${json}");
-    return _$CurrencyConvertResponseModelFromJson(json);
-  }
+  factory CurrencyConvertResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$CurrencyConvertResponseModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$CurrencyConvertResponseModelToJson(this);
+
+  //toString
+  @override
+  String toString() {
+    return 'CurrencyConvertResponseModel(success: $success, query: $query, info: $info, result: $result)';
+  }
 }
 
 @JsonSerializable()

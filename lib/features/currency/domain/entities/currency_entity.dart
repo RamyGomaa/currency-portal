@@ -11,8 +11,9 @@ abstract class CurrencyResponseEntity {
 abstract class CurrencyResponseDataEntity {
   final String? currencyCode;
   final String? currencyName;
-  final String? imageUrl;
-
+  String? imageUrl;
+  String? base64Image;
+  get hasImageUrl => imageUrl != null || base64Image != null;
   CurrencyResponseDataEntity({
     this.currencyCode,
     this.currencyName,

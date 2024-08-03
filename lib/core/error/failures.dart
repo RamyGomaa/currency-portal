@@ -111,7 +111,7 @@ final exceptionToFailureMap = {
   NoTokenException: const NoTokenFailure(),
   RefreshTokenExpiredException: const RefreshTokenExpiredFailure(),
   NetworkException: const NetworkFailure(),
-  CacheException: CacheFailure(),
+  CacheException: const CacheFailure(),
   LocationException: LocationFailure(),
   LocationPermissionDeniedException: LocationPermissionDeniedFailure(),
   LocationServiceDisabledException: LocationServiceDisabledFailure(),

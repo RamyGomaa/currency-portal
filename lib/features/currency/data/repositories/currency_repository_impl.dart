@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:currency_converter/core/constants/constants.dart';
 import 'package:currency_converter/core/error/exceptions.dart';
 import 'package:currency_converter/core/error/failures.dart';
 import 'package:currency_converter/core/flavor/flavor_config.dart';
@@ -8,7 +11,7 @@ import 'package:currency_converter/features/currency/domain/entities/historical_
 import 'package:currency_converter/features/currency/domain/params/convert_currency_params.dart';
 import 'package:currency_converter/features/currency/domain/params/historical_currency_params.dart';
 import 'package:dartz/dartz.dart';
-import 'package:logger/logger.dart';
+import 'package:flutter/services.dart';
 
 import '../../domain/repositories/currency_repository.dart';
 import '../datasources/currency_local_datasource.dart';
@@ -18,11 +21,13 @@ class CurrencyRepositoryImpl extends CurrencyRepository {
   final CurrencyRemoteDataSource remoteDataSource;
   final CurrencyLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
+  final FlavorConfig flavorConfig;
 
   CurrencyRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
+    required this.flavorConfig,
   });
 
   @override
@@ -63,31 +68,61 @@ class CurrencyRepositoryImpl extends CurrencyRepository {
   @override
   Future<Either<Failure, CurrencyResponseEntity>> getCurrencyList() async {
     try {
-      // Try to get data from local storage first
-      final localResult = await localDataSource.getCurrencyList();
-      if (localResult == null) {
-        throw CacheException();
-      }
+      final localResult = await _getLocalCurrencyList();
       return Right(localResult);
-    } on Exception catch (_) {
-      // If local data is not available, check for internet connection
+    } on CacheException catch (_) {
       if (await networkInfo.isConnected) {
-        try {
-          // Fetch data from remote source
-          final remoteResult = await remoteDataSource
-              .getCurrencyList(FlavorConfig.instance.currencyApiKey);
-          // Cache the fetched data
-          localDataSource.cacheCurrencyList(remoteResult);
-          return Right(remoteResult);
-        } on Exception catch (_) {
-          // If fetching from remote fails, return ServerFailure
-          return const Left(ServerFailure());
-        }
+        return await _fetchAndCacheRemoteCurrencyList();
       } else {
-        // If no internet connection, return NetworkFailure
         return const Left(NetworkFailure());
       }
     }
+  }
+
+  Future<CurrencyResponseEntity> _getLocalCurrencyList() async {
+    final localResult = await localDataSource.getCurrencyList();
+    if (localResult != null) {
+      return localResult;
+    } else {
+      throw CacheException();
+    }
+  }
+
+  Future<Either<Failure, CurrencyResponseEntity>>
+      _fetchAndCacheRemoteCurrencyList() async {
+    try {
+      final remoteResult =
+          await remoteDataSource.getCurrencyList(flavorConfig.currencyApiKey);
+      await _addCurrencyDetails(remoteResult);
+      await localDataSource.cacheCurrencyList(remoteResult);
+      return Right(remoteResult);
+    } on Exception catch (_) {
+      return const Left(ServerFailure());
+    }
+  }
+
+  Future<void> _addCurrencyDetails(CurrencyResponseEntity remoteResult) async {
+    final jsonString =
+        await rootBundle.loadString('assets/data/currencies.json');
+    final List<dynamic> jsonFile = json.decode(jsonString);
+
+    final Map<String, Map<String, String>> currencyDetails = {
+      for (var currency in jsonFile)
+        currency['code'] ?? '': {
+          'countryCode': currency['countryCode'] ?? '',
+          'flagUrl': currency['flag'] ?? ''
+        }
+    };
+
+    remoteResult.symbols?.forEach((element) {
+      var details = currencyDetails[element.currencyCode];
+      if (details != null &&
+          !Constants.unwantedCountries.contains(details['countryCode'])) {
+        element.imageUrl =
+            "https://flagcdn.com/48x36/${details['countryCode']?.toLowerCase()}.png";
+        element.base64Image = details['flagUrl'];
+      }
+    });
   }
 
   @override

@@ -4,4 +4,6 @@ class Constants {
   static const int splashScreenTimeInSeconds = 3;
 
   static const networkTimeout = 30;
+
+  static const List<String> unwantedCountries = ["IL"];
 }

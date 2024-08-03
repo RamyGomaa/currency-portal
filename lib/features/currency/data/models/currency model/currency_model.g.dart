@@ -57,17 +57,23 @@ class CurrencyResponseDataModelAdapter
     return CurrencyResponseDataModel(
       currencyCode: fields[0] as String,
       currencyName: fields[1] as String,
+      imageUrl: fields[2] as String?,
+      base64Image: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, CurrencyResponseDataModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.currencyCode)
       ..writeByte(1)
-      ..write(obj.currencyName);
+      ..write(obj.currencyName)
+      ..writeByte(2)
+      ..write(obj.imageUrl)
+      ..writeByte(3)
+      ..write(obj.base64Image);
   }
 
   @override
@@ -107,6 +113,8 @@ CurrencyResponseDataModel _$CurrencyResponseDataModelFromJson(
     CurrencyResponseDataModel(
       currencyCode: json['currencyCode'] as String,
       currencyName: json['currencyName'] as String,
+      imageUrl: json['imageUrl'] as String?,
+      base64Image: json['base64Image'] as String?,
     );
 
 Map<String, dynamic> _$CurrencyResponseDataModelToJson(
@@ -114,4 +122,6 @@ Map<String, dynamic> _$CurrencyResponseDataModelToJson(
     <String, dynamic>{
       'currencyCode': instance.currencyCode,
       'currencyName': instance.currencyName,
+      'imageUrl': instance.imageUrl,
+      'base64Image': instance.base64Image,
     };

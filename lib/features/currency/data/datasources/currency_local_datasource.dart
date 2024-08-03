@@ -1,4 +1,5 @@
 import 'package:currency_converter/core/constants/hive_constants.dart';
+import 'package:currency_converter/core/error/exceptions.dart';
 import 'package:hive/hive.dart';
 
 import '../../domain/entities/currency_entity.dart';
@@ -65,7 +66,7 @@ class CurrencyLocalDataSourceImpl implements CurrencyLocalDataSource {
     if (data != null) {
       return data;
     } else {
-      throw Exception('No data found in local storage');
+      throw CacheException();
     }
   }
 

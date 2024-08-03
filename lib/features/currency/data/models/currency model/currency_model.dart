@@ -1,8 +1,6 @@
 //import json serializer
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:logger/logger.dart';
-import 'package:retrofit/http.dart';
 
 import '../../../../../core/constants/hive_constants.dart';
 import '../../../domain/entities/currency_entity.dart';
@@ -25,8 +23,6 @@ class CurrencyResponseModel extends CurrencyResponseEntity {
   //from json
 
   factory CurrencyResponseModel.fromJson(Map<String, dynamic> json) {
-    Logger().i('We are calling from json method in currency model');
-
     //from map to list
     var list = json['symbols'] as Map<String, dynamic>;
     var symbols = list.entries
@@ -40,7 +36,6 @@ class CurrencyResponseModel extends CurrencyResponseEntity {
       symbols: symbols,
     );
 
-    Logger().i('We are calling from json method in currency model $x');
     return x;
   }
 
@@ -64,10 +59,18 @@ class CurrencyResponseDataModel extends CurrencyResponseDataEntity {
   @override
   @HiveField(1)
   final String currencyName;
+  @override
+  @HiveField(2)
+  String? imageUrl = '';
+
+  @HiveField(3)
+  String? base64Image;
 
   CurrencyResponseDataModel({
     required this.currencyCode,
     required this.currencyName,
+    this.imageUrl,
+    this.base64Image,
   });
 
   //from json
@@ -80,4 +83,10 @@ class CurrencyResponseDataModel extends CurrencyResponseDataEntity {
 
   //to json
   Map<String, dynamic> toJson() => _$CurrencyResponseDataModelToJson(this);
+
+  //tostring
+  @override
+  String toString() {
+    return 'CurrencyResponseDataModel{currencyCode: $currencyCode, currencyName: $currencyName, imageUrl: $imageUrl}';
+  }
 }
