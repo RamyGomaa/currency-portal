@@ -2,7 +2,7 @@ import 'package:currency_converter/features/currency/domain/entities/currency_en
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failures.dart';
-import '../../../../shared/domain/usecase/usecase.dart';
+import '../../../../core/usecases/usecase.dart';
 import '../repositories/currency_repository.dart';
 
 class GetCurrencyListUsecase

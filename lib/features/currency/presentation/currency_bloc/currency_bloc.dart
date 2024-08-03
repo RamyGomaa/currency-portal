@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
 import 'package:currency_converter/features/currency/domain/usecases/get_currency_list_usecase.dart';
-import 'package:currency_converter/shared/domain/usecase/usecase.dart';
+import 'package:currency_converter/core/usecases/usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:path_provider/path_provider.dart';
 // ignore: depend_on_referenced_packages

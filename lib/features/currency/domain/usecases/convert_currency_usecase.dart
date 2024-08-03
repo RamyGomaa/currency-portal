@@ -1,7 +1,7 @@
 import 'package:currency_converter/core/error/failures.dart';
 import 'package:currency_converter/features/currency/domain/params/convert_currency_params.dart';
 import 'package:currency_converter/features/currency/domain/repositories/currency_repository.dart';
-import 'package:currency_converter/shared/domain/usecase/usecase.dart';
+import 'package:currency_converter/core/usecases/usecase.dart';
 import 'package:dartz/dartz.dart';
 
 import '../entities/currrency_convert_entity.dart';
