@@ -12,12 +12,12 @@ class CurrencyInitial extends CurrencyState {}
 class CurrencyLoading extends CurrencyState {}
 
 class CurrencyLoaded extends CurrencyState {
-  final CurrencyResponseEntity currenyData;
+  final CurrencyResponseEntity currencyData;
 
-  const CurrencyLoaded({required this.currenyData});
+  const CurrencyLoaded({required this.currencyData});
 
   @override
-  List<Object> get props => [currenyData];
+  List<Object> get props => [currencyData];
 }
 
 class CurrencyError extends CurrencyState {

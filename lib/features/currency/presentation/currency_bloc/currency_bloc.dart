@@ -11,19 +11,15 @@ import 'package:equatable/equatable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import '../../domain/entities/currency_entity.dart';
-import '../../domain/params/convert_currency_params.dart';
 
 part 'currency_event.dart';
 part 'currency_state.dart';
 
 class CurrencyBloc extends Bloc<CurrencyEvent, CurrencyState> {
   GetCurrencyListUsecase getCurrencyListUsecase;
-  GetHistoricalCurrencyUseCase getHistoricalCurrencyUseCase;
-  ConvertCurrencyUsecase convertCurrencyUsecase;
+
   CurrencyBloc(
     this.getCurrencyListUsecase,
-    this.getHistoricalCurrencyUseCase,
-    this.convertCurrencyUsecase,
   ) : super(CurrencyInitial()) {
     on<CurrencyEvent>((event, emit) async {
       if (event is GetCurrencyListEvent) {
@@ -31,24 +27,9 @@ class CurrencyBloc extends Bloc<CurrencyEvent, CurrencyState> {
         var res = await getCurrencyListUsecase(NoParams());
         res.fold(
           (l) => emit(CurrencyError(message: l.message)),
-          (r) => emit(CurrencyLoaded(currenyData: r)),
+          (r) => emit(CurrencyLoaded(currencyData: r)),
         );
       }
-      // if (event is ConvertCurrencyEvent) {
-      //   emit(CurrencyLoading());
-      //   var res = await convertCurrencyUsecase(ConvertCurrencyParams(
-      //     fromCurrency: event.params.fromCurrency,
-      //     toCurrency: event.params.toCurrency,
-      //     amount: event.params.amount,
-      //     apiKey: FlavorConfig.instance.currencyApiKey,
-      //     //2024-01-01
-      //     date: DateTime.now().toIso8601String().substring(0, 10),
-      //   ));
-      //   res.fold(
-      //     (l) => emit(CurrencyError(message: l.message)),
-      //     (r) => emit(CurrencyLoaded(convertResponse: r)),
-      //   );
-      // }
     });
   }
   Future<File> loadBase64Image(String base64Image, String currencyCode) async {

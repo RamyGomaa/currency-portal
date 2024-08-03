@@ -12,6 +12,8 @@ import 'package:currency_converter/features/currency/domain/params/convert_curre
 import 'package:currency_converter/features/currency/domain/params/historical_currency_params.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:ntp/ntp.dart';
 
 import '../../domain/repositories/currency_repository.dart';
 import '../datasources/currency_local_datasource.dart';
@@ -34,6 +36,9 @@ class CurrencyRepositoryImpl extends CurrencyRepository {
   Future<Either<Failure, CurrencyConvertResponseEntity>> convertCurrency(
       ConvertCurrencyParams params) async {
     if (await networkInfo.isConnected) {
+      params.apiKey = flavorConfig.currencyApiKey;
+      params.date = DateFormat('yyyy-MM-dd')
+          .format((await NTP.now()).subtract(const Duration(days: 1)));
       return await _fetchFromRemoteOrLocal(params);
     } else {
       return await _fetchFromLocal(params, isNetworkConnected: false);
@@ -44,6 +49,7 @@ class CurrencyRepositoryImpl extends CurrencyRepository {
       _fetchFromRemoteOrLocal(ConvertCurrencyParams params) async {
     try {
       final result = await remoteDataSource.convertCurrency(params);
+      await localDataSource.cacheCurrencyConversion(result);
       return Right(result);
     } catch (e) {
       return await _fetchFromLocal(params);
@@ -137,7 +143,7 @@ class CurrencyRepositoryImpl extends CurrencyRepository {
       }
     } else {
       try {
-        final result = await localDataSource.getHistoricalData(params);
+        final result = await localDataSource.getHistoricalData();
         if (result == null) {
           throw CacheException();
         }

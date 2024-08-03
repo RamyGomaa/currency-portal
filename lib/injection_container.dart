@@ -1,12 +1,14 @@
 import 'package:currency_converter/core/flavor/flavor_config.dart';
 import 'package:currency_converter/features/currency/data/datasources/currency_local_datasource.dart';
 import 'package:currency_converter/features/currency/data/datasources/currency_remote_datasource.dart';
+import 'package:currency_converter/features/currency/data/models/currency%20convert%20model/currency_convert_model.dart';
 import 'package:currency_converter/features/currency/data/repositories/currency_repository_impl.dart';
 import 'package:currency_converter/features/currency/domain/repositories/currency_repository.dart';
 import 'package:currency_converter/features/currency/domain/usecases/convert_currency_usecase.dart';
 import 'package:currency_converter/features/currency/domain/usecases/get_currency_list_usecase.dart';
 import 'package:currency_converter/features/currency/domain/usecases/get_historical_currency.dart';
-import 'package:currency_converter/features/currency/presentation/bloc/currency_bloc.dart';
+import 'package:currency_converter/features/currency/presentation/currency_bloc/currency_bloc.dart';
+import 'package:currency_converter/features/currency/presentation/currency_convertion_bloc/currency_conversion_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
@@ -25,7 +27,8 @@ final sl = GetIt.instance;
 Future<void> init() async {
 //!bloc
 
-  sl.registerFactory(() => CurrencyBloc(sl(), sl(), sl()));
+  sl.registerFactory(() => CurrencyBloc(sl()));
+  sl.registerFactory(() => CurrencyConversionBloc(sl()));
 
 //!usecases
 
@@ -64,6 +67,10 @@ Future<void> init() async {
     Hive.init(appDocumentDirectory.path);
     Hive.registerAdapter(CurrencyResponseModelAdapter());
     Hive.registerAdapter(CurrencyResponseDataModelAdapter());
+    Hive.registerAdapter(CurrencyConvertResponseModelAdapter());
+    Hive.registerAdapter(CurrencyConvertQueryModelAdapter());
+    Hive.registerAdapter(CurrencyConvertInfoModelAdapter());
+    // Hive.registerAdapter(CurrencyConvertResponseModelAdapter());
 
     return Hive;
   });

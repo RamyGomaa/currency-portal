@@ -1,5 +1,5 @@
-import 'package:currency_converter/features/currency/presentation/bloc/currency_bloc.dart';
-import 'package:currency_converter/features/currency/presentation/pages/currenty_home_page.dart';
+import 'package:currency_converter/features/currency/presentation/currency_bloc/currency_bloc.dart';
+import 'package:currency_converter/features/currency/presentation/pages/currenty_main_page.dart';
 import 'package:currency_converter/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +19,7 @@ class Routes {
   static Map<String, dynamic> routesList = {
     homeRoute: BlocProvider<CurrencyBloc>(
       create: (context) => sl(),
-      child: const CurrencyHomePage(),
+      child: const CurrencyMainPage(),
     ),
   };
 

@@ -15,8 +15,7 @@ abstract class CurrencyLocalDataSource {
   Future<void> cacheCurrencyList(CurrencyResponseEntity currencyList);
 
   //get historical data
-  Future<HistoricalCurrencyResponseEntity>? getHistoricalData(
-      HistoricalCurrencyParams params);
+  Future<HistoricalCurrencyResponseEntity>? getHistoricalData();
 
   Future<void> cacheHistoricalData(
       HistoricalCurrencyResponseEntity historicalCurrencyResponseEntity);
@@ -71,8 +70,7 @@ class CurrencyLocalDataSourceImpl implements CurrencyLocalDataSource {
   }
 
   @override
-  Future<HistoricalCurrencyResponseEntity>? getHistoricalData(
-      HistoricalCurrencyParams params) async {
+  Future<HistoricalCurrencyResponseEntity>? getHistoricalData() async {
     var res = await Hive.openBox(HiveBox.historicalData);
     return res.get(HiveBox.historicalData);
   }
